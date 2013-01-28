@@ -43,3 +43,35 @@ p ApacheLogEntry.match(
 )
 # => #<ApacheLogEntry @id=nil @h="87.18.183.252" @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:50:49-07:00 ((2454692j,28249s,0n),-25200s,2299161j)> @r="GET /blog/index.xml HTTP/1.1" @s=302 @b=527 @referer="-" @user_agent="Feedreader 3.13 (Powered by Newsbrain)">
 ```
+
+or using Regex compile options ...
+
+```
+ApacheLogEntry.compile(%{
+    ^
+    \\g<h>              # host
+    [ ]
+    \\g<l>              # l
+    [ ]
+    \\g<u>              # user
+    [ ]\\[
+    \\g<t>              # timestamp
+    \\][ ]"
+    \\g<r>              # request
+    "[ ]
+    \\g<s>              # status
+    [ ]
+    \\g<b>              # bytes
+    [ ]"
+    \\g<referer>        # referer
+    "[ ]"
+    \\g<user_agent>     # user agent
+    "$
+  },
+  Regexp::EXTENDED
+)
+p ApacheLogEntry.match(
+  '87.18.183.252 - - [13/Aug/2008:00:50:49 -0700] "GET /blog/index.xml HTTP/1.1" 302 527 "-" "Feedreader 3.13 (Powered by Newsbrain)"'
+)
+# => #<ApacheLogEntry @id=nil @h="87.18.183.252" @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:50:49-07:00 ((2454692j,28249s,0n),-25200s,2299161j)> @r="GET /blog/index.xml HTTP/1.1" @s=302 @b=527 @referer="-" @user_agent="Feedreader 3.13 (Powered by Newsbrain)">
+```
