@@ -15,6 +15,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = [ "lib" ]
   gem.version       = DataMapper::Regex::VERSION
 
+  gem.required_ruby_version = '>= 1.9.2'
+
   gem.add_runtime_dependency('dm-core', '~> 1.0')
   gem.add_runtime_dependency('dm-migrations', '~> 1.0')
   gem.add_runtime_dependency('dm-sqlite-adapter', '~> 1.0')
