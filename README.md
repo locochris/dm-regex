@@ -75,3 +75,9 @@ p ApacheLogEntry.match(
 )
 # => #<ApacheLogEntry @id=nil @h="87.18.183.252" @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:50:49-07:00 ((2454692j,28249s,0n),-25200s,2299161j)> @r="GET /blog/index.xml HTTP/1.1" @s=302 @b=527 @referer="-" @user_agent="Feedreader 3.13 (Powered by Newsbrain)">
 ```
+
+Property options
+---
+
+ * the default regex used for matching each property is `/.+?/` unless the `:pat` option is passed in.
+ * values will be type cast to the specified `DataMapper` types in the property definition, unless a `:method` option is passed in.
