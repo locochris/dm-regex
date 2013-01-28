@@ -15,7 +15,9 @@ module DataMapper
       end
 
       def match(buf, parent=self)
-        pat.match(buf) { |m| parent.first_or_new(attrs_from_match(m)) }
+        pat.match(buf) { |m| parent.first_or_new(attrs_from_match(m)) }.tap { |obj|
+          yield obj if block_given?
+        }
       end
 
       def property(name, type, opts={}, &block)

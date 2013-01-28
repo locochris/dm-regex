@@ -26,10 +26,6 @@ describe DataMapper::Regex do
   describe '.match' do
     subject { ApacheLogEntry.match(line) }
 
-    before :all do
-
-    end
-
     let(:line) {
       '87.18.183.252 - - [13/Aug/2008:00:50:49 -0700] "GET /blog/index.xml HTTP/1.1" 302 527 "-" "Feedreader 3.13 (Powered by Newsbrain)"'
     }
