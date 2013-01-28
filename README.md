@@ -76,8 +76,13 @@ p ApacheLogEntry.match(
 # => #<ApacheLogEntry @id=nil @h="87.18.183.252" @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:50:49-07:00 ((2454692j,28249s,0n),-25200s,2299161j)> @r="GET /blog/index.xml HTTP/1.1" @s=302 @b=527 @referer="-" @user_agent="Feedreader 3.13 (Powered by Newsbrain)">
 ```
 
-Property options
+`.compile`
+---
+ * works the same as the built-in `Regexp.compile`
+ * uses named groups specified using `\g<name>` syntax to map groups to properties. (NB. make sure to use `\\g` when using double quoted strings)
+
+`property opts`
 ---
 
- * the default regex used for matching each property is `/.+?/` unless the `:pat` option is passed in.
- * values will be type cast to the specified `DataMapper` types in the property definition, unless a `:method` option is passed in.
+ * `:pat` option specifies the pattern used to match the property. (NB. the default of `/.+?/` might be good enough in most cases)
+ * `:method` option takes a proc that is used to transform the matched value. (NB. DataMapper's built-in typescasting might be good enough in most cases)
