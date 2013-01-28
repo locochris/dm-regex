@@ -46,7 +46,7 @@ p ApacheLogEntry.match(
 
 or using Regex compile options ...
 
-```
+``` ruby
 ApacheLogEntry.compile(%{
     ^
     \\g<h>              # host
