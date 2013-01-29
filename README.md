@@ -1,7 +1,7 @@
 dm-regex
 ===
 
-[![Build Status](https://travis-ci.org/locomote/dm-regex.png)](https://travis-ci.org/locomote/dm-regex)
+[![Build Status](https://travis-ci.org/locomote/dm-regex.png?branch=master)](https://travis-ci.org/locomote/dm-regex)
 [![Dependency Status](https://gemnasium.com/locomote/dm-regex.png)](https://gemnasium.com/locomote/dm-regex)
 
 Installation
