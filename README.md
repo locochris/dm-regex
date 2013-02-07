@@ -2,6 +2,7 @@ dm-regex
 ===
 
 [![Build Status](https://travis-ci.org/locomote/dm-regex.png?branch=master)](https://travis-ci.org/locomote/dm-regex)
+[![Gem Version](https://badge.fury.io/rb/dm-regex.png)](http://badge.fury.io/rb/dm-regex)
 [![Dependency Status](https://gemnasium.com/locomote/dm-regex.png)](https://gemnasium.com/locomote/dm-regex)
 
 Installation
