@@ -104,9 +104,40 @@ class Post
   belongs_to :blog
 
   # my interesting blog, m@blog.com"
-  compile '^\g<title>, \g<author>$'
+  #compile '^\g<title>, \g<author>$'
+  compile %{
+    ^
+    \\g<title>
+    ,[ ]
+    \\g<author>
+    $
+  }, Regexp::EXTENDED
 end
 
+class Word
+  include DataMapper::Resource
+
+  property :id    , Serial
+  property :value , String , :pat => /\b\w+\b/
+
+  belongs_to :sentence
+
+  compile '\g<value>'
+end
+
+class Sentence
+  include DataMapper::Resource
+
+  property :id    , Serial
+
+  #property :value , String , :pat => '(.*?\g<word>.*?)+(\.|\?|\!)'
+  property :value , String
+
+  has n, :words
+
+  #compile '^\g<value>$'
+  compile '^(?<value>(.*?\g<word>.*?)+(\.|\?|\!))$', Regexp::MULTILINE
+end
 
 DataMapper.setup :default, "sqlite::memory:"
 DataMapper.auto_upgrade!
@@ -163,5 +194,31 @@ describe DataMapper::Regex do
     its(:blog) {
       should == Blog.first_or_create(:name => 'foo')
     }
+  end
+
+  describe 'child.embedded_pat' do
+    subject { child.embedded_pat }
+
+    context 'when parent is OneToMany' do
+      let(:parent) { Sentence         }
+      let(:child ) { Word             }
+      let(:str   ) { 'One two three.' }
+
+      it { should == /\b\w+\b/ }
+    end
+  end
+
+  describe 'parent.match(str)' do
+    subject { parent.match(str).tap(&:save) }
+
+    context 'when parent is OneToMany' do
+      let(:parent) { Sentence               }
+      let(:child ) { Word                   }
+      let(:str   ) { "One two\nthree four." }
+
+      it { should == Sentence.first_or_create }
+      its(:value) { should ==  str }
+      its(:words) { should == %w(One two three four).map { |value| Word.first_or_create(:value => value) } }
+    end
   end
 end

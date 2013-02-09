@@ -5,32 +5,23 @@ dm-regex
 [![Gem Version](https://badge.fury.io/rb/dm-regex.png)](http://badge.fury.io/rb/dm-regex)
 [![Dependency Status](https://gemnasium.com/locomote/dm-regex.png)](https://gemnasium.com/locomote/dm-regex)
 
-Installation
----
 
-```
-gem install dm-regex
-```
+`dm-regex` is a glorifed wrapper to `Regexp.compile` that builds `DataMapper::Resource`s using `MatchData` returned from `Regexp::match`.
+It does this by extending `DataMapper::Resource` with the following class methods:
 
-API
----
-
-`.property opts`
-----
- * a wrapper for DM's `property`, first extracting any `:pat` and `:method` options
+### `property(opts)`
+ * a wrapper for DM's `property`, that first extracts any `:pat` and `:method` options
    * `:pat` option specifies the pattern used to match the property.
-     (NB. the default of `/.+?/` might be good enough in most cases)
+     (NB. the default pattern of `/.+?/` might be good enough in most cases)
    * `:method` option takes a proc that is used to transform the matched value.
      (NB. DataMapper's built-in typescasting might be good enough in most cases)
 
-`.compile(pattern, options=0)`
-----
+### `compile(pattern, options=0)`
  * a glorified wrapper for `Regexp.compile` that uses the `MatchData` to build models
  * uses named groups specified using `\g<name>` syntax to map groups to property regexes.
    (NB. make sure to use `\\g` when using double quoted strings)
 
-`.match(str, relationship=self)`
-----
+### `match(str, relationship=self)`
  * builds a model by matching against `str` (returns nil on failure)
  * where defined, uses the `:pat` regex to match each of the values
  * where defined, uses the transforming `:method` to transform property values
@@ -39,7 +30,15 @@ API
    (ie. building up a model "tree" from each "leaf")
 
 
-# Example Usages
+Installation
+---
+
+```
+gem install dm-regex
+```
+
+
+Example Usages
 ---
 
 ### Example: recursive matching
@@ -126,7 +125,7 @@ class Request
   has 1, :verb, :through => :request_type
 
   # 87.18.183.252 - - [13/Aug/2008:00:50:49 -0700] "GET /blog/index.xml HTTP/1.1" 302 527 "-" "Feedreader 3.13 (Powered by Newsbrain)"
-  # compile '^\g<host> \g<l> \g<u> \[\g<t>\] "\g<request_type>" \g<s> \g<b> "\g<referer>" "\g<user_agent>"$'
+  #compile '^\g<host> \g<l> \g<u> \[\g<t>\] "\g<request_type>" \g<s> \g<b> "\g<referer>" "\g<user_agent>"$'
   compile %{
     ^
     \\g<host>           # This is an EXTENDED regex
@@ -216,3 +215,46 @@ Post.match("my interesting blog, me@blog.com", blog.posts).tap(&:save)
 p blog.posts
 # => [#<Post @id=1 @title="my interesting blog" @author="me@blog.com" @blog_id=1>]
 ```
+
+### Example: iterative matching
+``` ruby
+require 'dm-regex'
+
+class Word
+  include DataMapper::Resource
+
+  property :id    , Serial
+  property :value , String , :pat => /\b\w+\b/
+
+  belongs_to :sentence
+
+  compile '\g<value>'
+end
+
+class Sentence
+  include DataMapper::Resource
+
+  property :id    , Serial
+  property :value , String
+
+  has n, :words
+
+  compile '^(?<value>(.*?\g<word>.*?)+(\.|\?|\!))$', Regexp::MULTILINE
+end
+
+DataMapper.setup :default, "sqlite::memory:"
+require 'dm-migrations'
+DataMapper.auto_upgrade!
+
+str = "One two\nthree four."
+
+Sentence.match(str).tap(&:save)
+
+p Sentence.all
+# => [#<Sentence @id=1 @value="One two\nthree four.">]
+p Sentence.first.words
+# => [#<Word @id=1 @value="One" @sentence_id=1>, #<Word @id=2 @value="two" @sentence_id=1>, #<Word @id=3 @value="three" @sentence_id=1>, #<Word @id=4 @value="four" @sentence_id=1>]
+```
+
+# Gotchas
+  *
