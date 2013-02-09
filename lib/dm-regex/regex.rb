@@ -1,3 +1,7 @@
+# TODO
+# * remove word hard-coding
+# * implement model.relationship.match()
+# * remove relationship from model.match(str, relationship)
 require 'dm-core'
 
 module DataMapper
@@ -34,7 +38,7 @@ module DataMapper
             # TODO iterate through children
             scanning_pat = /(?<#{:word}>#{regex_groups[:word]})/ # XXX :word is hard-coded here
             one_to_many.scan(scanning_pat).map(&:first).each do |sub_buf|
-              Word.match(sub_buf, obj.words)
+              Word.match(sub_buf, obj.words)     # XXX Word is hard-coded here
             end
           }
         else

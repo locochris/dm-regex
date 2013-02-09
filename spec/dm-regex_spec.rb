@@ -181,8 +181,10 @@ describe DataMapper::Regex do
 
   describe '.match(str, relationship)' do
     subject { Post.match(str, relationship).tap(&:save) }
+    # subject { relationship.match(str).tap(&:save) } # TODO - make this work
 
-    let(:relationship) { Blog.first_or_create(:name => 'foo').posts }
+    let(:blog) { Blog.first_or_create(:name => 'foo') }
+    let(:relationship) { blog.posts }
 
     let(:title ) { 'my interesting blog'                      }
     let(:author) { 'me@blog.com'                              }
@@ -191,9 +193,7 @@ describe DataMapper::Regex do
     its(:title ) { should == title  }
     its(:author) { should == author }
 
-    its(:blog) {
-      should == Blog.first_or_create(:name => 'foo')
-    }
+    its(:blog) { should == blog }
   end
 
   describe 'child.embedded_pat' do
