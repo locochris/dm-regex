@@ -6,7 +6,7 @@ dm-regex
 [![Dependency Status](https://gemnasium.com/locomote/dm-regex.png)](https://gemnasium.com/locomote/dm-regex)
 
 
-`dm-regex` is a glorifed wrapper to `Regexp.compile` that builds a family of `DataMapper::Resource`s using `Regexp MatchData`.
+dm-regex is a glorifed wrapper to `Regexp.compile` that matches against strings to build a family of DataMapper Resources.
 
 This wrapper works by extending `DataMapper::Resource` with the following class methods:
 
@@ -24,11 +24,13 @@ This wrapper works by extending `DataMapper::Resource` with the following class 
 
 ### `match(str, relationship=self)`
  * builds a model by matching against `str` (returns nil on failure)
- * where defined, uses the `:pat` regex to match each of the values
+ * where defined, uses the `:pat` regex to match property values
  * where defined, uses the transforming `:method` to transform property values
  * if the parent relationship is given it adds the model to that relationship,
  * otherwise it recursivly builds and adds models to all the parent relationships
    (ie. building up a model "tree" from each "leaf")
+ * or iteratively adds child models to the parent
+   (ie. building up model "leaves" for the "tree")
 
 
 Installation
@@ -259,3 +261,4 @@ p Sentence.first.words
 
 # Gotchas
   * Resources need to be defined in before they can be referenced by `compile`, so order is important (TODO - fix this by making the compile lazy)
+  * When using a double quoted string argument to compile make sure to use `\\g` for groups and not '\g'
