@@ -6,8 +6,9 @@ dm-regex
 [![Dependency Status](https://gemnasium.com/locomote/dm-regex.png)](https://gemnasium.com/locomote/dm-regex)
 
 
-`dm-regex` is a glorifed wrapper to `Regexp.compile` that builds `DataMapper::Resource`s using `MatchData` returned from `Regexp::match`.
-It does this by extending `DataMapper::Resource` with the following class methods:
+`dm-regex` is a glorifed wrapper to `Regexp.compile` that builds a family of `DataMapper::Resource`s using `Regexp MatchData`.
+
+This wrapper works by extending `DataMapper::Resource` with the following class methods:
 
 ### `property(opts)`
  * a wrapper for DM's `property`, that first extracts any `:pat` and `:method` options
@@ -41,7 +42,7 @@ gem install dm-regex
 Example Usages
 ---
 
-### Example: recursive matching
+### Example: Matching ManyToOne
 ``` ruby
 require 'dm-regex'
 
@@ -180,7 +181,7 @@ p a_referer.requests.hosts
 # => [#<Host @id=4 @value="217.220.110.75">]
 ```
 
-### Example: matching with a relationship
+### Example: Matching with a relationship
 ``` ruby
 require 'dm-regex'
 
@@ -216,7 +217,7 @@ p blog.posts
 # => [#<Post @id=1 @title="my interesting blog" @author="me@blog.com" @blog_id=1>]
 ```
 
-### Example: iterative matching
+### Example: Matching OneToMany
 ``` ruby
 require 'dm-regex'
 
@@ -257,4 +258,4 @@ p Sentence.first.words
 ```
 
 # Gotchas
-  *
+  * Resources need to be defined in before they can be referenced by `compile`, so order is important (TODO - fix this by making the compile lazy)
