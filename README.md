@@ -260,5 +260,5 @@ p Sentence.first.words
 ```
 
 # Gotchas
-  * Resources need to be defined in before they can be referenced by `compile`, so order is important (TODO - fix this by making the compile lazy)
+  * Resources need to be defined before they can be referenced by `compile`, so order is important (TODO - fix this by making the compile lazy)
   * When using a double quoted string argument to compile make sure to use `\\g` for groups and not '\g'
