@@ -1,5 +1,4 @@
 # TODO
-# * remove word hard-coding
 # * implement model.relationship.match()
 # * remove relationship from model.match(str, relationship)
 require 'dm-core'
@@ -33,12 +32,15 @@ module DataMapper
 #p 'is_parent'
           m = @pat.match(buf)
           first_or_new(regex_match(m)).tap { |obj|
-            # TODO iterate through :one_to_manys ... hard :(
             one_to_many = buf[scanable_pat, :one_to_many]
-            # TODO iterate through children
-            scanning_pat = /(?<#{:word}>#{regex_groups[:word]})/ # XXX :word is hard-coded here
-            one_to_many.scan(scanning_pat).map(&:first).each do |sub_buf|
-              Word.match(sub_buf, obj.words)     # XXX Word is hard-coded here
+            @children.each do |child|
+              scanning_pat = /(?<#{child}>#{regex_groups[child]})/
+              one_to_many.scan(scanning_pat).map(&:first).each do |sub_buf|
+                rel = relationship_for(
+                  DataMapper::Inflector.pluralize(child).to_sym
+                )
+                rel.child_model.match(sub_buf, obj.send(rel.name))
+              end
             end
           }
         else
@@ -60,11 +62,15 @@ module DataMapper
       end
 
       def scanable_pat
+        # TODO - tidy this up
         regex_from_string_pat = /^\(\?[-mix]+:(.*)\)$/m
-        one_to_many_pat = /(?<brace_expression>\(([^()]|\g<brace_expression>)*\)\+)/
+        one_to_many_pat = /(?<brace_expression>\(([^()]|\g<brace_expression>)*\)\+)/  # TODO handle all the "many"s ie. +, *, {n}, {n..m}
+        group_pat = /\\g<(?<group_name>\w+)>/
+        @children = []
         Regexp.compile(
           @pat.to_s.gsub(one_to_many_pat) { |m|
             @is_parent = true
+            @children = m.scan(group_pat).map(&:first).map(&:to_sym)
             "(?<one_to_many>#{m})"
           }[regex_from_string_pat, 1],
           @pat.options
