@@ -6,9 +6,15 @@ dm-regex
 [![Dependency Status](https://gemnasium.com/locomote/dm-regex.png)](https://gemnasium.com/locomote/dm-regex)
 
 
-dm-regex is a glorifed wrapper to `Regexp.compile` that matches against strings to build a family of DataMapper Resources.
+dm-regex is a glorifed wrapper to `Regexp.compile` that matches against strings to build a family of DataMapper models.
 
-This wrapper works by extending `DataMapper::Resource` with the following class methods:
+It works by mapping [named regexp groups](http://ruby.about.com/od/newinruby191/a/namedreg.htm) to DataMapper [properties](http://datamapper.org/docs/properties.html) and [associations](http://datamapper.org/docs/associations.html).
+
+Those groups are then referenced in the pattern string passed to `compile` using `\g<name>`, where `name` is the name of the property. 
+
+Associations can also be referenced in the same way; their pattern values come from embeddable versions of their compiled regexes.
+
+To do all this `DataMapper::Resource` is extended with the following class methods:
 
 ### `property(opts)`
  * a wrapper for DM's `property`, that first extracts any `:pat` and `:method` options
