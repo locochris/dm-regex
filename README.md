@@ -261,4 +261,4 @@ p Sentence.first.words
 ```
 
 # Gotchas
-  * When using a double quoted string argument to compile make sure to use `\\g` for groups and not '\g'
+  * When passing a double quoted string argument to `compile` make sure to use `\\g` for groups and not `\g`
