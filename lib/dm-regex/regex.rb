@@ -21,16 +21,15 @@ module DataMapper
 
       def compile(pattern, options=0)
         @pattern = pattern
-        @pat = ::Regexp.compile("#{regex_groups_s}#{pattern}", options)
+        @options = options
       end
 
       def match(buf, relationship=self)
         # TODO clean up this one
-#p @pat, buf
+#p regex_pat, buf
         scanable_pat  # TODO remove the need to call this here
         if is_parent?
-#p 'is_parent'
-          m = @pat.match(buf)
+          m = regex_pat.match(buf)
           first_or_new(regex_match(m)).tap { |obj|
             one_to_many = buf[scanable_pat, :one_to_many]
             @children.each do |child|
@@ -44,7 +43,7 @@ module DataMapper
             end
           }
         else
-          @pat.match(buf) { |m|
+          regex_pat.match(buf) { |m|
             relationship.first_or_new(regex_match(m))
           }.tap { |obj|
             yield obj if block_given?
@@ -68,12 +67,12 @@ module DataMapper
         group_pat = /\\g<(?<group_name>\w+)>/
         @children = []
         Regexp.compile(
-          @pat.to_s.gsub(one_to_many_pat) { |m|
+          regex_pat.to_s.gsub(one_to_many_pat) { |m|
             @is_parent = true
             @children = m.scan(group_pat).map(&:first).map(&:to_sym)
             "(?<one_to_many>#{m})"
           }[regex_from_string_pat, 1],
-          @pat.options
+          regex_pat.options
         )
       end
 
@@ -81,6 +80,10 @@ module DataMapper
 
       def is_parent?
         @is_parent
+      end
+
+      def regex_pat
+        @regex_pat = ::Regexp.compile("#{regex_groups_s}#{@pattern}", @options)
       end
 
       def regex_property_options

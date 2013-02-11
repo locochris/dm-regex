@@ -223,17 +223,6 @@ p blog.posts
 ``` ruby
 require 'dm-regex'
 
-class Word
-  include DataMapper::Resource
-
-  property :id    , Serial
-  property :value , String , :pat => /\b\w+\b/
-
-  belongs_to :sentence
-
-  compile '\g<value>'
-end
-
 class Sentence
   include DataMapper::Resource
 
@@ -243,6 +232,17 @@ class Sentence
   has n, :words
 
   compile '^(?<value>(.*?\g<word>.*?)+(\.|\?|\!))$', Regexp::MULTILINE
+end
+
+class Word
+  include DataMapper::Resource
+
+  property :id    , Serial
+  property :value , String , :pat => /\b\w+\b/
+
+  belongs_to :sentence
+
+  compile '\g<value>'
 end
 
 DataMapper.setup :default, "sqlite::memory:"
@@ -260,5 +260,4 @@ p Sentence.first.words
 ```
 
 # Gotchas
-  * Resources need to be defined before they can be referenced by `compile`, so order is important (TODO - fix this by making the compile lazy)
   * When using a double quoted string argument to compile make sure to use `\\g` for groups and not '\g'
