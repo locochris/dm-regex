@@ -81,6 +81,7 @@ class Verb
   has n, :request_types
   has n, :requests, :through => :request_types
 
+  # GET
   compile '^\g<value>$'
 end
 
@@ -102,7 +103,7 @@ class Referer
   include DataMapper::Resource
 
   property :id    , Serial
-  property :value , String , :pat => /.+/
+  property :value , String , :pat => /.+/ , :method => lambda { |value| value unless value == '-' }
 
   has n, :requests
 
@@ -114,8 +115,8 @@ class Request
   include DataMapper::Resource
 
   property :id      , Serial
-  property :l       , String
-  property :u       , String
+  property :l       , String   , :method => lambda { |value| value unless value == '-' }
+  property :u       , String   , :method => lambda { |value| value unless value == '-' }
   property :t       , DateTime , :method => lambda { |value| DateTime.strptime(value, '%d/%b/%Y:%H:%M:%S %z') }
   property :s       , Integer
   property :b       , Integer
@@ -170,12 +171,12 @@ end
 p get = Verb.first(:value => 'GET')
 # => #<Verb @id=1 @value="GET">
 p get.requests
-# => [#<Request @id=1 @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:50:49-07:00 ((2454692j,28249s,0n),-25200s,2299161j)> @s=302 @b=527 @host_id=1 @request_type_id=1 @user_agent_id=1 @referer_id=1>, #<Request @id=2 @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:50:55-07:00 ((2454692j,28255s,0n),-25200s,2299161j)> @s=304 @b=283 @host_id=2 @request_type_id=2 @user_agent_id=2 @referer_id=1>, #<Request @id=3 @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:50:55-07:00 ((2454692j,28255s,0n),-25200s,2299161j)> @s=304 @b=283 @host_id=2 @request_type_id=3 @user_agent_id=2 @referer_id=1>, #<Request @id=5 @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:51:02-07:00 ((2454692j,28262s,0n),-25200s,2299161j)> @s=200 @b=82331 @host_id=4 @request_type_id=5 @user_agent_id=4 @referer_id=2>]
+# => [#<Request @id=1 @l=nil @u=nil @t=#<DateTime: 2008-08-13T00:50:49-07:00 ((2454692j,28249s,0n),-25200s,2299161j)> @s=302 @b=527 @host_id=1 @request_type_id=1 @user_agent_id=1 @referer_id=1>, #<Request @id=2 @l=nil @u=nil @t=#<DateTime: 2008-08-13T00:50:55-07:00 ((2454692j,28255s,0n),-25200s,2299161j)> @s=304 @b=283 @host_id=2 @request_type_id=2 @user_agent_id=2 @referer_id=1>, #<Request @id=3 @l=nil @u=nil @t=#<DateTime: 2008-08-13T00:50:55-07:00 ((2454692j,28255s,0n),-25200s,2299161j)> @s=304 @b=283 @host_id=2 @request_type_id=3 @user_agent_id=2 @referer_id=1>, #<Request @id=5 @l=nil @u=nil @t=#<DateTime: 2008-08-13T00:51:02-07:00 ((2454692j,28262s,0n),-25200s,2299161j)> @s=200 @b=82331 @host_id=4 @request_type_id=5 @user_agent_id=4 @referer_id=2>]
 
 p a_host = Host.first(:value => '79.28.16.191')
 # => #<Host @id=2 @value="79.28.16.191">
 p a_host.requests
-# => [#<Request @id=2 @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:50:55-07:00 ((2454692j,28255s,0n),-25200s,2299161j)> @s=304 @b=283 @host_id=2 @request_type_id=2 @user_agent_id=2 @referer_id=1>, #<Request @id=3 @l="-" @u="-" @t=#<DateTime: 2008-08-13T00:50:55-07:00 ((2454692j,28255s,0n),-25200s,2299161j)> @s=304 @b=283 @host_id=2 @request_type_id=3 @user_agent_id=2 @referer_id=1>]
+# => [#<Request @id=2 @l=nil @u=nil @t=#<DateTime: 2008-08-13T00:50:55-07:00 ((2454692j,28255s,0n),-25200s,2299161j)> @s=304 @b=283 @host_id=2 @request_type_id=2 @user_agent_id=2 @referer_id=1>, #<Request @id=3 @l=nil @u=nil @t=#<DateTime: 2008-08-13T00:50:55-07:00 ((2454692j,28255s,0n),-25200s,2299161j)> @s=304 @b=283 @host_id=2 @request_type_id=3 @user_agent_id=2 @referer_id=1>]
 
 p a_referer = Referer.last
 # => #<Referer @id=2 @value="http://www.google.it/search?hl=it&q=outlook+pst+file+4+GB&meta=">

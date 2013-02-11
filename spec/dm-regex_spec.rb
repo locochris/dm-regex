@@ -54,7 +54,7 @@ class Referer
   include DataMapper::Resource
 
   property :id    , Serial
-  property :value , String , :pat => /.+/
+  property :value , String , :pat => /.+/ , :method => lambda { |value| value unless value == '-' }
 
   has n, :requests
 
@@ -66,8 +66,8 @@ class Request
   include DataMapper::Resource
 
   property :id      , Serial
-  property :l       , String
-  property :u       , String
+  property :l       , String   , :method => lambda { |value| value unless value == '-' }
+  property :u       , String   , :method => lambda { |value| value unless value == '-' }
   property :t       , DateTime , :method => lambda { |value| DateTime.strptime(value, '%d/%b/%Y:%H:%M:%S %z') }
   property :s       , Integer
   property :b       , Integer
@@ -151,8 +151,8 @@ describe DataMapper::Regex do
       '87.18.183.252 - - [13/Aug/2008:00:50:49 -0700] "GET /blog/index.xml HTTP/1.1" 302 527 "-" "Feedreader 3.13 (Powered by Newsbrain)"'
     }
 
-    its(:l) { should == '-' }
-    its(:u) { should == '-' }
+    its(:l) { should == nil }
+    its(:u) { should == nil }
     its(:t) { should == DateTime.parse('13/08/2008T00:50:49 -0700') }
     its(:s) { should == 302 }
     its(:b) { should == 527 }
@@ -164,7 +164,7 @@ describe DataMapper::Regex do
       should == Verb.first_or_create(:value => 'GET')
     }
     its(:referer) {
-      should == Referer.first_or_create(:value => '-')
+      should == Referer.first_or_create(:value => nil)
     }
     its(:user_agent) {
       should == UserAgent.first_or_create(:value => 'Feedreader 3.13 (Powered by Newsbrain)')
