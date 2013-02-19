@@ -1,9 +1,9 @@
 dm-regex
 ===
 
-[![Build Status](https://travis-ci.org/locomote/dm-regex.png?branch=master)](https://travis-ci.org/locomote/dm-regex)
+[![Build Status](https://travis-ci.org/chris/dm-regex.png?branch=master)](https://travis-ci.org/locochris/dm-regex)
 [![Gem Version](https://badge.fury.io/rb/dm-regex.png)](http://badge.fury.io/rb/dm-regex)
-[![Dependency Status](https://gemnasium.com/locomote/dm-regex.png)](https://gemnasium.com/locomote/dm-regex)
+[![Dependency Status](https://gemnasium.com/locochris/dm-regex.png)](https://gemnasium.com/locochris/dm-regex)
 
 
 dm-regex is a glorifed wrapper to `Regexp.compile` that matches against strings to build a family of DataMapper models.
