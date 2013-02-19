@@ -7,7 +7,7 @@
  * Add OneToMany matching
  * Add recursive matching
 
-## 0.0.2 (Jan 29, 2013)
+## 0.0.2 (Jan 29, 2013) [![Gem Version](https://badge.fury.io/rb/dm-regex.png)](http://badge.fury.io/rb/dm-regex)
 
  * Add block yielding to Regex.match
 
