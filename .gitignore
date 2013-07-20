@@ -2,5 +2,6 @@ coverage
 pkg
 Gemfile.lock
 .rvmrc
+.ruby_version
 gems
 bin

@@ -1,7 +1,7 @@
 dm-regex
 ===
 
-[![Build Status](https://travis-ci.org/chris/dm-regex.png?branch=master)](https://travis-ci.org/locochris/dm-regex)
+[![Build Status](https://travis-ci.org/locochris/dm-regex.png?branch=master)](https://travis-ci.org/locochris/dm-regex)
 [![Gem Version](https://badge.fury.io/rb/dm-regex.png)](http://badge.fury.io/rb/dm-regex)
 [![Dependency Status](https://gemnasium.com/locochris/dm-regex.png)](https://gemnasium.com/locochris/dm-regex)
 
@@ -10,7 +10,7 @@ dm-regex is a glorifed wrapper to `Regexp.compile` that matches against strings 
 
 It works by mapping [named regexp groups](http://ruby.about.com/od/newinruby191/a/namedreg.htm) to DataMapper [properties](http://datamapper.org/docs/properties.html) and [associations](http://datamapper.org/docs/associations.html).
 
-Those groups are then referenced in the pattern string passed to `compile` using `\g<name>`, where `name` is the name of the property. 
+Those groups are then referenced in the pattern string passed to `compile` using `\g<name>`, where `name` is the name of the property.
 
 Associations can also be referenced in the same way; their pattern values come from embeddable versions of their compiled regexes.
 

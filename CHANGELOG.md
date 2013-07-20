@@ -1,6 +1,6 @@
 # dm-regex Changelog
 
-## 0.1.0 (unreleased)
+## 0.1.0 (unreleased) [![Gem Version](https://badge.fury.io/rb/dm-regex.png)](http://badge.fury.io/rb/dm-regex)
 
  * Add lazy compilation. Resources need not be defined before they can be referenced by `compile`
  * Add README driven development.  Uses [rdd](https://rubygems.org/gems/rdd) gem.
