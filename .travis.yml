@@ -1,8 +1,8 @@
 rvm:
   - 1.9.2
   - 1.9.3
-  - rbx
+#  - rbx
   - jruby
-  - ree
-  - ruby-head
+#  - ree
+#  - ruby-head
   - 2.0.0
